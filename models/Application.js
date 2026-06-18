@@ -11,8 +11,14 @@ const applicationSchema = new mongoose.Schema({
     ref: 'User',
     required: true
   },
-  coverLetter: String,
-  proposedBudget: Number,
+  coverLetter: {
+    type: String,
+    required: true
+  },
+  proposedBudget: {
+    type: Number,
+    required: true
+  },
   status: {
     type: String,
     enum: ['pending', 'accepted', 'rejected'],
@@ -24,7 +30,7 @@ const applicationSchema = new mongoose.Schema({
   }
 });
 
-// Prevent duplicate applications
+// Prevent duplicate applications (one freelancer per job)
 applicationSchema.index({ jobId: 1, freelancerId: 1 }, { unique: true });
 
 module.exports = mongoose.model('Application', applicationSchema);
