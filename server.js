@@ -1,5 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const saveRoutes = require('./routes/saveRoutes');
+const dashboardRoutes = require('./routes/dashboardRoutes');
 const cors = require('cors');
 require('dotenv').config();
 
@@ -7,7 +9,14 @@ require('dotenv').config();
 const app = express();
 
 // Middleware
-app.use(cors());
+app.use(cors({
+  origin: [
+    'http://localhost:5173',                                    // Local development
+    'https://freelance-marketplace-frontend.onrender.com'       
+  ],
+  credentials: true
+}));
+
 app.use(express.json());
 
 // MongoDB connection
@@ -19,6 +28,8 @@ mongoose.connect(process.env.MONGODB_URI)
 app.use('/api/auth', require('./routes/authRoutes'));
 app.use('/api/jobs', require('./routes/jobRoutes'));
 app.use('/api/applications', require('./routes/applicationRoutes'));
+app.use('/api/saved', saveRoutes);
+app.use('/api/dashboard', dashboardRoutes);
 
 // Test route
 app.get('/', (req, res) => {
